@@ -1,6 +1,6 @@
 # Script com EF Core
 
-Nos testes com EF Core a utilização de script apresentou erro abaixo.
+Nos testes com EF Core a utilização de script apresentou erro abaixo. Estou tentando localizar uma forma de corrigir esse problema.
 
 ~~~
 System.IO.FileLoadException: Could not load file or assembly 'Microsoft.Extensions.DependencyInjection, Version=5.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60'. Could not find or load a specific file. (0x80131621)
