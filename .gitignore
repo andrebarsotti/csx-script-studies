@@ -1,0 +1,2 @@
+# Ignorando arquivo .db
+ef-core-sample/*.db

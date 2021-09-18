@@ -2,41 +2,45 @@
 #r "nuget: Microsoft.EntityFrameworkCore.Sqlite, 5.0.10"
 #r "nuget: Microsoft.EntityFrameworkCore.Design, 5.0.10"
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+
+
+public static string GetScriptFolder([CallerFilePath] string path = null) => Path.GetDirectoryName(path);
+
 
 Run();
 
 private static void Run()
 {
-    using (var db = new BloggingContext())
-    {
-        db.Database.Migrate();
+    using var db = new BloggingContext();
+    db.Database.EnsureDeleted();
+    db.Database.EnsureCreated();
 
-        // Note: This sample requires the database to be created before running.
-        Console.WriteLine($"Database path: {db.DbPath}.");
-        
-        // Create
-        Console.WriteLine("Inserting a new blog");
-        db.Add(new Blog { Url = "http://blogs.msdn.com/adonet" });
-        db.SaveChanges();
+    // Note: This sample requires the database to be created before running.
+    Console.WriteLine($"Database path: {db.DbPath}.");
+    
+    // Create
+    Console.WriteLine("Inserting a new blog");
+    db.Add(new Blog { Url = "http://blogs.msdn.com/adonet" });
+    db.SaveChanges();
 
-        // Read
-        Console.WriteLine("Querying for a blog");
-        var blog = db.Blogs
-            .OrderBy(b => b.BlogId)
-            .First();
+    // Read
+    Console.WriteLine("Querying for a blog");
+    var blog = db.Blogs
+        .OrderBy(b => b.BlogId)
+        .First();
 
-        // Update
-        Console.WriteLine("Updating the blog and adding a post");
-        blog.Url = "https://devblogs.microsoft.com/dotnet";
-        blog.Posts.Add(
-            new Post { Title = "Hello World", Content = "I wrote an app using EF Core!" });
-        db.SaveChanges();
+    // Update
+    Console.WriteLine("Updating the blog and adding a post");
+    blog.Url = "https://devblogs.microsoft.com/dotnet";
+    blog.Posts.Add(
+        new Post { Title = "Hello World", Content = "I wrote an app using EF Core!" });
+    db.SaveChanges();
 
-        // Delete
-        Console.WriteLine("Delete the blog");
-        db.Remove(blog);
-        db.SaveChanges();
-    }
+    // Delete
+    Console.WriteLine("Delete the blog");
+    db.Remove(blog);
+    db.SaveChanges();
 }
 
 public class BloggingContext : DbContext
@@ -48,16 +52,17 @@ public class BloggingContext : DbContext
 
     public BloggingContext()
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = $"{path}{System.IO.Path.DirectorySeparatorChar}blogging.db";
+        DbPath = $"{GetScriptFolder()}{System.IO.Path.DirectorySeparatorChar}blogging.db";
     }
+
+    public BloggingContext(DbContextOptions<BloggingContext> options) : base(options) {}
 
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 }
+
 
 public class Blog
 {
