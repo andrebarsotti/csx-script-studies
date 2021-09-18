@@ -4,9 +4,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 
-
 public static string GetScriptFolder([CallerFilePath] string path = null) => Path.GetDirectoryName(path);
-
 
 Run();
 
