@@ -1,3 +1,5 @@
-# Estudos de scripts CSX
+# C# Script Tests and Sample
 
-Esse repositório possui estudos diversos e exemplos de uso de scripts csx com algumas anotações.
+This is my studies and code samples of C# script.
+
+Usually I'd put other README files with the samples with some notes (writen in brazilian portuguese).
